@@ -10,7 +10,7 @@ class Book:
         self.rating = rating
 
     def __str__(self):
-        return f"{self.title} - {self.price} - {self.rating}"
+        return f"{self.title} - {self.price} - {self.rating} - {self.link}"
 
 
 def main():
