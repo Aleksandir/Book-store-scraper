@@ -20,7 +20,6 @@ def main():
     for i in range(1, max_page + 1):
         URL = f"http://books.toscrape.com/catalogue/page-{i}.html"
         books.append(get_books(URL))
-
         save_books(books)
 
 
