@@ -14,10 +14,17 @@ class Book:
 
 
 def main():
+    max_page = get_max_page("http://books.toscrape.com/catalogue/page-1.html")
+
+    books = []
     for i in range(1, max_page + 1):
         URL = f"http://books.toscrape.com/catalogue/page-{i}.html"
-        get_books(URL)
+        books.append(get_books(URL))
 
+        save_books(books)
+
+
+def save_books(books):
     with open("books.csv", "w") as file:
         file.write("Title,Price,Rating,Link\n")
         for book in books:
@@ -37,7 +44,14 @@ def get_max_page(URL):
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
     soup = soup.find(class_="pager").find("li").get_text()
-    return int(soup[-2:])
+    # Split the text by spaces
+    parts = soup.split()
+
+    # The last part should be the maximum page number
+    max_page = parts[-1]
+
+    # Convert the maximum page number to an integer and return it
+    return int(max_page)
 
 
 def get_books(URL):
