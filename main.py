@@ -19,11 +19,12 @@ def main():
     books = []
     for i in range(1, max_page + 1):
         URL = f"http://books.toscrape.com/catalogue/page-{i}.html"
-        books.append(get_books(URL))
+        print(f"Scraping {URL}...")
+        get_books(URL, books)
         save_books(books)
 
 
-def save_books(books):
+def save_books(books, URL="http://books.toscrape.com/catalogue"):
     with open("books.csv", "w") as file:
         file.write("Title,Price,Rating,Link\n")
         for book in books:
@@ -53,7 +54,7 @@ def get_max_page(URL):
     return int(max_page)
 
 
-def get_books(URL):
+def get_books(URL, books):
     """
     Retrieves a list of books from the given URL.
 
@@ -67,7 +68,6 @@ def get_books(URL):
     soup = BeautifulSoup(page.content, "html.parser")
     soup = soup.find_all(class_="product_pod")
 
-    books = []
     for book in soup:
         # get link
         link = book.find("a").get("href")
