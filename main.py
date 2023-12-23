@@ -2,11 +2,16 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from bs4 import BeautifulSoup
+from requests import Response
 from tqdm import tqdm
 
 
 class Book:
-    def __init__(self, link, title, price, rating):
+    """
+    Represents a book with its link, title, price, and rating.
+    """
+
+    def __init__(self, link: str, title: str, price: float, rating: str):
         self.link = link
         self.title = title
         self.price = price
@@ -50,7 +55,7 @@ def save_books(books, URL="http://books.toscrape.com/catalogue"):
             file.write(f"{book.title},{book.price},{book.rating},{URL}/{book.link}\n")
 
 
-def get_max_page(URL):
+def get_max_page(URL: str) -> int:
     """
     Retrieves the maximum page number from a given URL.
 
@@ -60,17 +65,13 @@ def get_max_page(URL):
     Returns:
         int: The maximum page number found on the webpage.
     """
-    page = requests.get(URL)
-    soup = BeautifulSoup(page.content, "html.parser")
-    soup = soup.find(class_="pager").find("li").get_text()
+    page: Response = requests.get(URL)
+    soup: BeautifulSoup = BeautifulSoup(page.content, "html.parser")
     # Split the text by spaces
-    parts = soup.split()
+    parts: list[str] = soup.find(class_="pager").find("li").get_text().split()
 
-    # The last part should be the maximum page number
-    max_page = parts[-1]
-
-    # Convert the maximum page number to an integer and return it
-    return int(max_page)
+    # The last element in the list is the maximum page number, return it as an int
+    return int(parts[len(parts) - 1])
 
 
 def get_books(URL):
